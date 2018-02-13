@@ -1,0 +1,46 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: alexa-talking-parrot
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: nodejs6.10
+  # environment:
+    # DYNAMODB_TABLE: quotes-db
+  region: us-east-1
+  timeout: 30
+  profile: mtd
+  deploymentBucket:
+    name: alexa-talking-parrot-deployment
+  role: arn:aws:iam::740047743500:role/alexa-lambda-and-dynamodb
+
+# The `functions` block defines what code to deploy
+functions:
+  talkingParrot:
+    handler: handler.talkingParrot
+    description: Serverless Lambda function to interact with Talking Parrot Alexa application
+    events:
+          - alexaSkill
+
+resources:
+  Resources:
+    QuotesDb:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: "N"
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "quotes-db"
