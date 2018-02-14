@@ -18,7 +18,7 @@ const dbGet = promisify(ddb.get, ddb);
 const dbPut = promisify(ddb.put, ddb);
 const dbDelete = promisify(ddb.delete, ddb);
 
-AWS.config.update({ region: 'us-east-1' });
+AwsSDK.config.update({ region: 'us-east-1' });
 
 const handlers = {
 
@@ -31,27 +31,27 @@ const handlers = {
 
     'RandomQuoteIntent'() {
         const id = 1;
-        const name = slots.RecipeName.value;
-        const location = slots.RecipeLocation.value;
-        const isQuick = slots.LongOrQuick.value.toLowerCase() === 'quick';
-        const dynamoParams = {
-            TableName: quotesTable,
-            Item: {
-                Name: name,
-                UserId: userId,
-                Location: location,
-                IsQuick: isQuick
-            }
-        };
+        // const name = slots.RecipeName.value;
+        // const location = slots.RecipeLocation.value;
+        // const isQuick = slots.LongOrQuick.value.toLowerCase() === 'quick';
+        // const dynamoParams = {
+        //     TableName: quotesTable,
+        //     Item: {
+        //         Name: name,
+        //         UserId: userId,
+        //         Location: location,
+        //         IsQuick: isQuick
+        //     }
+        // };
 
         const checkIfRecipeExistsParams = {
             TableName: quotesTable,
             Key: {
-                id: name
+                id: id
             }
         };
 
-        console.log('Attempting to add recipe', dynamoParams);
+        // console.log('Attempting to add recipe', dynamoParams);
 
         // query DynamoDB to see if the item exists first
         dbGet(checkIfRecipeExistsParams)

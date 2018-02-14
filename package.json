@@ -7,6 +7,6 @@
   "dependencies": {
     "alexa-sdk": "^1.0.25",
     "aws-sdk": "^2.193.0",
-    "es6-promisify": "^6.0.0"
+    "es6-promisify": "^5.0.0"
   }
 }
