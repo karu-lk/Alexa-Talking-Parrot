@@ -30,63 +30,50 @@ const handlers = {
     },
 
     'RandomQuoteIntent'() {
+        const { slots } = this.event.request.intent;
         const id = 1;
-        // const name = slots.RecipeName.value;
-        // const location = slots.RecipeLocation.value;
-        // const isQuick = slots.LongOrQuick.value.toLowerCase() === 'quick';
-        // const dynamoParams = {
-        //     TableName: quotesTable,
-        //     Item: {
-        //         Name: name,
-        //         UserId: userId,
-        //         Location: location,
-        //         IsQuick: isQuick
-        //     }
-        // };
+        const dynamoParams = {
+            TableName: quotesTable,
+            Limit: 10
+        };
+
+        // query DynamoDB to see if the item exists first
+        dbScan(dynamoParams)
+            .then(data => {
+                console.log('Get item succeeded', JSON.stringify(data));
+
+                this.emit(':tell', data.Items[0].quote);
+
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    },
+    'QuoteOfTheDayIntent'() {
+        const { slots } = this.event.request.intent;
+        const id = slots.QuoteID.value;
+
+        console.log(`Slot value for ID is ${id}`);
 
         const checkIfRecipeExistsParams = {
             TableName: quotesTable,
             Key: {
-                id: id
+                id: Number(id)
             }
         };
-
-        // console.log('Attempting to add recipe', dynamoParams);
 
         // query DynamoDB to see if the item exists first
         dbGet(checkIfRecipeExistsParams)
             .then(data => {
                 console.log('Get item succeeded', data);
 
-                this.emit(':tell', `Quote ${id} extracted`);
-
-                // const recipe = data.Item;
-
-                // if (recipe) {
-                //     const errorMsg = `Recipe ${name} already exists!`;
-                //     this.emit(':tell', errorMsg);
-                //     throw new Error(errorMsg);
-                // }
-                // else {
-                //     // no match, add the recipe
-                //     return dbPut(dynamoParams);
-                // }
+                this.emit(':tell', `Quote of the day is ${data.Item.quote}`);
             })
-            // .then(data => {
-            //     console.log('Add item succeeded', data);
-
-            //     this.emit(':tell', `Recipe ${name} added!`);
-            // })
             .catch(err => {
                 console.error(err);
             });
     }
 };
-
-
-
-
-
 
 exports.talkingParrot = function handler(event, context) {
     const alexa = AlexaSDK.handler(event, context);
