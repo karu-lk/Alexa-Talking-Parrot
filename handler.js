@@ -12,7 +12,7 @@ var states = {
 
 module.exports.talkingParrot = (event, context, callback) => {
   var alexa = ALEXA.handler(event, context);
-  alexa.APP_ID = "amzn1.ask.skill.2337ac6d-0616-4764-8bd8-b8775c0dc8b9";
+  alexa.appId = "amzn1.ask.skill.2337ac6d-0616-4764-8bd8-b8775c0dc8b9";
   alexa.registerHandlers(newSessionHandler, startTalkingParrotHandler);
   alexa.execute();
 };
@@ -37,6 +37,43 @@ var startTalkingParrotHandler = ALEXA.CreateStateHandler(states.STARTMODE, {
     var cardTitle = 'Random Quote Intent Card - Talking Parrot App';
     var voiceOutput = 'Testing 123'
     var repromptSpeech = 'Sorry I did not get it correctly. Could I please get your name?';
+
+    var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+    ddb.scan({
+      TableName: "quotes-db",
+      Limit: 10
+    }, function (err, data) {
+      if (err) {
+        context.done('error', 'reading failed');
+      }
+      for (var i in data.Items) {
+        i = data.Items[i];
+        console.log(i.quote.S);
+        context.done(null, "Ciao!");
+      }
+    })
+
+    // var params = {
+    //   ExpressionAttributeValues: {
+    //     ':s': {N: '2'},
+    //     ':e' : {N: '09'},
+    //     ':topic' : {S: 'PHRASE'}
+    //    },
+    //  KeyConditionExpression: 'Season = :s and Episode > :e',
+    //  ProjectionExpression: 'Title, Subtitle',
+    //  FilterExpression: 'contains (Subtitle, :topic)',
+    //  TableName: 'EPISODES_TABLE'
+    // };
+
+    // ddb.query(params, function(err, data) {
+    //   if (err) {
+    //     console.log("Error", err);
+    //   } else {
+    //     data.Items.forEach(function(element, index, array) {
+    //       console.log(element.Title.S + " (" + element.Subtitle.S + ")");
+    //     });
+    //   }
+    // });
 
     this.emit(':askWithCard', voiceOutput, repromptSpeech, cardTitle, voiceOutput);
   },

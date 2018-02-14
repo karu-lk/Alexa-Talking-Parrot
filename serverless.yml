@@ -23,7 +23,7 @@ provider:
 # The `functions` block defines what code to deploy
 functions:
   talkingParrot:
-    handler: handler.talkingParrot
+    handler: index.talkingParrot
     description: Serverless Lambda function to interact with Talking Parrot Alexa application
     events:
           - alexaSkill

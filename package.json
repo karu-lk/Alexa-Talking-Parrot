@@ -1,11 +1,12 @@
 {
-    "name": "talking-parrot",
-    "version": "1.0.0",
-    "description": "Alexa voice skill to provide mind blowing quotes",
-    "author": "Lilupa Karu",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "alexa-sdk": "^1.0.25",
-        "aws-sdk": "^2.193.0"
-    }
+  "name": "talking-parrot",
+  "version": "1.0.0",
+  "description": "Alexa voice skill to provide mind blowing quotes",
+  "author": "Lilupa Karu",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "alexa-sdk": "^1.0.25",
+    "aws-sdk": "^2.193.0",
+    "es6-promisify": "^6.0.0"
+  }
 }
